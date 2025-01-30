@@ -7,6 +7,11 @@ import faiss
 import numpy as np
 import gradio as gr
 import json
+import os
+import pickle
+
+# == Buat folder models ==
+os.makedirs("models", exist_ok=True)
 
 # == Load API Key dari File (Hindari Hardcoded Key) ==
 def load_api_key():
@@ -71,6 +76,16 @@ def load_faiss(index_path="vector_index.faiss"):
     global index
     index = faiss.read_index(index_path)
 
+# == Simpan dan Load Model Embedding ==
+def save_embeddings(embeddings_path="models/embeddings.pkl"):
+    with open(embeddings_path, "wb") as f:
+        pickle.dump(index, f)
+
+def load_embeddings(embeddings_path="models/embeddings.pkl"):
+    global index
+    with open(embeddings_path, "rb") as f:
+        index = pickle.load(f)
+
 # == Integrasi LLaMA via Groq API ==
 client = groq.Client(api_key=GROQ_API_KEY)
 
@@ -91,6 +106,7 @@ if __name__ == '__main__':
     # Tambahkan ke database FAISS
     add_to_db(text_chunks)
     save_to_faiss()  # Simpan FAISS index
+    save_embeddings()  
 
     # Tes pencarian RAG
     retrieved_chunks = search_db("Apa isi dokumen ini?")
