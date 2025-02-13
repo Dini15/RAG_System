@@ -12,13 +12,13 @@ font = ImageFont.truetype(font_path, size=12)
 
 class CustomPDF(FPDF):
     def header(self):
-        if self.page_no() > 1:  # Jangan tampilkan header di cover
-            self.set_font('Arial', 'B', 12)  # Pastikan font mendukung Unicode
+        if self.page_no() > 1:  
+            self.set_font('Arial', 'B', 12) 
             self.cell(0, 10, f'Mock User Manual - Halaman {self.page_no()}', align='C', ln=True)
             self.ln(5)
 
     def footer(self):
-        if self.page_no() > 1:  # Jangan tampilkan footer di cover
+        if self.page_no() > 1:  
             self.set_y(-15)
             self.set_font('Arial', 'I', 8)
             self.cell(0, 10, f'Halaman {self.page_no()}', align='C')
